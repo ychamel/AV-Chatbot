@@ -4,8 +4,8 @@ import streamlit as st
 from PIL import Image
 
 # init
-from Core.queries import init_chatbot
-from Core.sidebar import sidebar
+from Main.Core.queries import init_chatbot
+from Main.Core.sidebar import sidebar
 
 st.set_page_config(page_title="Contact Chatbot Demo", page_icon="📖", layout="wide")
 

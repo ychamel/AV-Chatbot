@@ -1,6 +1,6 @@
 import openai
 
-from Core.apis import DataHub, TOPICS
+from Main.Core.apis import DataHub, TOPICS
 import streamlit as st
 
 
