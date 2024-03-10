@@ -10,7 +10,7 @@ from Main.Core.sidebar import sidebar
 st.set_page_config(page_title="Contact Chatbot Demo", page_icon="📖", layout="wide")
 
 # image
-image = Image.open('src/logo.png')
+image = Image.open('Main/assets/logo.png')
 st.image(image)
 # Title
 st.header("AzkaVision Chatbot Demo")
