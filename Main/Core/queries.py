@@ -1,8 +1,13 @@
-import openai
-
 from Main.Core.apis import DataHub, TOPICS
 import streamlit as st
+from openai import OpenAI
 
+from Main.assets.TextInformation import AV_overview
+
+client = OpenAI(
+    # This is the default and can be omitted
+    api_key=st.session_state.get("OPENAI_API_KEY"),
+)
 
 @st.cache_data(show_spinner=False)
 def init_chatbot():
@@ -29,7 +34,7 @@ class Chatbot:
             {"role": "user", "content": f"question: {Query}"}
         ]
         # f"some key topics to cover are {topics.keys()} described as follows {topics}."
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model="gpt-3.5-turbo-1106",
             messages=messages,
             temperature=0,
@@ -50,17 +55,18 @@ class Chatbot:
         Topics = self.topic_identifier(Query)
         data = []
         if len(Topics) > 0:
-            data = self.datahub.getData(Topics)
+            data = self.datahub.getData(Query, Topics)
         # answer the following question using the following data
         messages = [
             {"role": "system",
              "content": "Create a final answer to the given questions using the provided document excerpts(in no particular order) as references. \n"
-                        f"The context is the following: {data}"
+                        f"The website explains Azkavision as follows: {AV_overview} \n"
+                        f"These are data extracted from the the backend that is deemed useful to answering the question: {data}"
              },
             {"role": "user", "content": f"question: {Query}"}
         ]
         # f"some key topics to cover are {topics.keys()} described as follows {topics}."
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model="gpt-3.5-turbo-1106",
             messages=messages,
         )

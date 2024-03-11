@@ -1,5 +1,4 @@
 
-import openai
 import streamlit as st
 from PIL import Image
 
@@ -28,7 +27,6 @@ if not openai_api_key:
         "please enter a password to access the app!"
     )
     st.stop()
-openai.api_key = openai_api_key
 
 
 # create message log
