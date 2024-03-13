@@ -19,26 +19,38 @@ class DataHub:
     def __init__(self):
         self.cache = {}
         self.setup()
+        self.auth = ""
+        self.setup()
 
     def setup(self):
         # get authentication key
-        pass
+        credentials = {
+            "username": os.environ.get("DB_USERNAME", None),
+            "password": os.environ.get("DB_PASSWORD", None)
+        }
+        r = requests.post(url="https://arkan.azkavision.com:8000/api/token/", data=credentials)
+        if r.status_code == 200:
+            self.auth = r.json().get('access')
 
     def getData(self, Query, Topics):
         """
         data extracter from azkavision api
         :return:
         """
+
         DATA = {}
-        headers = {"Authorization": os.environ.get("AV_TOKEN", None)}
-        base_url = "https://arkan.azkavision.com/api/"
+
+        headers = {"Authorization": "Bearer " + self.auth,
+                   'Accept': 'application/json'}
+        base_url = "https://arkan.azkavision.com:8000/api/"
+
         for topic in Topics:
             if topic not in TOPICS.keys():
                 # debug topic out of scope
                 continue
             # check cache
             if topic in self.cache.keys():
-                DATA[topic]=self.cache.get(topic)
+                DATA[topic] = self.cache.get(topic)
                 continue
 
             endpoint = ""
@@ -64,7 +76,9 @@ class DataHub:
             #     api_url = "calendar/events/"
 
             response = requests.get(url=base_url + endpoint, headers=headers)
-            DATA[topic] = response.json()
-            self.cache[topic] = response.json()
-
+            if response.status_code == 200:
+                DATA[topic] = response.json()
+                self.cache[topic] = response.json()
+            elif response.status_code == 401:
+                self.setup()
         return DATA
