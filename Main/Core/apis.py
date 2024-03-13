@@ -16,10 +16,10 @@ TOPICS = {"events": "return a list of events",
 
 
 class DataHub:
+    auth = ""
+    cache = {}
+
     def __init__(self):
-        self.cache = {}
-        self.setup()
-        self.auth = ""
         self.setup()
 
     def setup(self):
