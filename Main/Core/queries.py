@@ -73,6 +73,5 @@ class Chatbot:
         answer = ""
         for choice in response.choices:
             answer += choice.message.content
-        answer = ""
 
         return answer
